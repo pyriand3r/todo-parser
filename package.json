@@ -1,0 +1,21 @@
+{
+  "name": "todo-parser",
+  "version": "1.0.0",
+  "description": "todo.txt to js object parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc  --reporter=html --reporter=text mocha",
+    "watch": "mocha -w"
+  },
+  "keywords": [
+    "todo",
+    "parser"
+  ],
+  "author": "Gabriel Juelke <pyriand3r@gmail.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "mocha": "^3.5.0",
+    "nyc": "^11.1.0",
+    "sinon": "^3.2.1"
+  }
+}
