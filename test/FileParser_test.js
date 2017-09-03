@@ -1,13 +1,17 @@
 'use strict'
 
 const assert = require('assert')
-const FileParser = require('./../lib/FileParser')
+const proxyquire = require('proxyquire')
 
-let fileParser
+const readlineStub = {}
+const fsStub = {}
 
-beforeEach(function () {
-    fileParser = new FileParser()
+const FileParser = proxyquire('./../lib/FileParser', {
+    'readline': readlineStub,
+    'fs': fsStub
 })
+
+let fileParser = new FileParser()
 
 describe('FileParser', function () {
     describe('#parse()', function () {
@@ -17,6 +21,66 @@ describe('FileParser', function () {
                 done()
             })
         })
-        
+        it('should return an array of todo tasks', function (done) {
+            let streamMock = new require('stream').Readable()
+            readlineStub.createInterface = function () { return streamMock }
+            fsStub.existsSync = function () { return true }
+            fsStub.createReadStream = function () { }
+
+            fileParser.parse('/path/to/file', function (err, data) {
+                if (err) {
+                    done(err)
+                }
+                assert.equal(Array.isArray(data), true)
+                done()
+            })
+
+            streamMock.emit('close')
+        })
+        it('should parse line events with the Parser', function (done) {
+            let streamMock = new require('stream').Readable()
+            readlineStub.createInterface = function () { return streamMock }
+            fsStub.existsSync = function () { return true }
+            fsStub.createReadStream = function () { }
+
+            let expected = {
+                original: '(A) Test task +context @project',
+                residue: ' Test task  ',
+                priority: 'A',
+                creationDate: null,
+                completionDate: null,
+                description: 'Test task',
+                context: ['context'],
+                project: ['project'],
+                done: false
+            }
+
+            fileParser.parse('/path/to/file', function (err, data) {
+                if (err) {
+                    done(err)
+                }
+                assert.equal(data.length, 1)
+                assert.deepEqual(data[0], expected)
+                done()
+            })
+            streamMock.emit('line', '(A) Test task +context @project')
+            streamMock.emit('close')
+        })
+        it('should parse only not empty line events', function (done) {
+            let streamMock = new require('stream').Readable()
+            readlineStub.createInterface = function () { return streamMock }
+            fsStub.existsSync = function () { return true }
+            fsStub.createReadStream = function () { }
+
+            fileParser.parse('/path/to/file', function (err, data) {
+                if (err) {
+                    done(err)
+                }
+                assert.equal(data.length, 0)
+                done()
+            })
+            streamMock.emit('line', '')
+            streamMock.emit('close')
+        })
     })
 })
