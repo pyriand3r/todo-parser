@@ -83,4 +83,28 @@ describe('FileParser', function () {
             streamMock.emit('close')
         })
     })
+    
+    describe('#register()', function () {
+        it('should pass input to its parsers register method', function (done) {
+            let executed = false
+            let streamMock = new require('stream').Readable()
+            readlineStub.createInterface = function () { return streamMock }
+            fsStub.existsSync = function () { return true }
+            fsStub.createReadStream = function () { }
+
+            fileParser.register(function () {
+                executed = true
+            })
+
+            fileParser.parse('/path/to/file', function (err, data) {
+                if (err) {
+                    done(err)
+                }
+                assert.equal(executed, true)
+                done()
+            })
+            streamMock.emit('line', '(A) test message')
+            streamMock.emit('close')
+        })
+    })
 })
