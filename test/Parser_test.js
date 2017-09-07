@@ -78,7 +78,7 @@ describe('Parser', function() {
                 priority: 'A',
                 creationDate: null,
                 completionDate: null,
-                description: 'test message',
+                description: '',
                 context: [],
                 project: [],
                 done: false
@@ -95,13 +95,49 @@ describe('Parser', function() {
             parser.register(function () {})
             assert.equal(parser.customParser.length, 1)
         })
-        it('should not add anything else than a method to the customParser array', function () {
-            parser.register('string')
-            parser.register(1)
-            parser.register(true)
-            parser.register(['array'])
-            parser.register({type: 'object'})
-            assert.equal(parser.customParser.length, 0)
+        it('should throw an error if custom parser is not a function', function () {
+            assert.throws(function () {
+                parser.register('string')
+            })
+        })
+    })
+
+    describe('#override()', function () {
+        it('should override a default parser', function () {
+            let executed = false
+            let newParser = function () {
+                executed = true
+            }
+
+            parser.override('description', newParser)
+            parser.parse('')
+
+            assert.equal(executed, true)
+        })
+        it('should throw an error if parser name does not exist', function () {
+            assert.throws(function () {
+                parser.override('wrongName', function () {})
+            })
+        })
+        it('should throw an error if method is not a function', function () {
+            assert.throws(function () {
+                parser.override('description', 'noFunction')
+            })
+        })
+    })
+
+    describe('additional parser', function () {
+        it('dueDateParser', function () {
+            let dueDateParser = function (data) {
+                let match = data.original.match(/due:([0-9]{4}-[0-9]{2}-[0-9]{2})/)
+                if (match !== null) {
+                    data.dueDate = new Date(match[1])
+                }
+            }
+            parser.register(dueDateParser)
+            let data = parser.parse('(A) 2017-10-01 Something to do due:2017-10-30')
+            let expected = new Date('2017-10-30')
+            assert.equal(data.dueDate.getDate(), expected.getDate())
         })
     })
 })
