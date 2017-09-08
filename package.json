@@ -6,6 +6,7 @@
   "scripts": {
     "coverage": "nyc  --reporter=html --reporter=text mocha",
     "test": "mocha",
+    "test:reports": "nyc --reporter lcov mocha --recursive --reporter xunit --reporter-options output=reports/xunit.xml",    
     "watch": "mocha -w"
   },
   "keywords": [
