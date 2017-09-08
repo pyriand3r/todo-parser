@@ -1,0 +1,32 @@
+osx_image: xcode8.3
+language: javascript
+sudo: required
+dist: trusty
+matrix:
+  include:
+  - os: osx
+  - os: linux
+    env: CC=clang CXX=clang++ npm_config_clang=1
+    compiler: clang
+cache:
+  directories:
+  - node_modules
+  - app/node_modules
+  - "$HOME/.electron"
+  - "$HOME/.cache"
+  - '$HOME/.sonar/cache'
+install:
+- nvm install 6
+- npm install
+- npm prune
+script:
+- npm run test:reports
+- sonar-scanner
+addons:
+  sonarcloud:
+    organization: "pyriand3r-github"
+    token:
+      secure: "${SONAR_TOKEN}"
+    branches:
+      - master
+      - develop
