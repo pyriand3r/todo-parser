@@ -9,8 +9,6 @@ matrix:
 cache:
   directories:
   - node_modules
-  - app/node_modules
-  - "$HOME/.electron"
   - "$HOME/.cache"
   - '$HOME/.sonar/cache'
 install:
