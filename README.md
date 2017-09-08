@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/pyriand3r/todo-parser.svg?branch=master)](https://travis-ci.org/pyriand3r/todo-parser) 
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=pyriand3r.todo-parser%3Amaster)](https://sonarcloud.io/dashboard?id=pyriand3r.todo-parser%3Amaster)
-[![Code Coverage](https://sonarcloud.io/api/badges/measure?key=pyriand3r.todo-parser%3Amaster&metric=coverage)](https://sonarcloud.io/dashboard?id=pyriand3r.todo-parser%3Amaster)
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=pyriand3r.todo-parser)](https://sonarcloud.io/dashboard?id=pyriand3r.todo-parser)
+[![Code Coverage](https://sonarcloud.io/api/badges/measure?key=pyriand3r.todo-parser&metric=coverage)](https://sonarcloud.io/dashboard?id=pyriand3r.todo-parser)
 
 # todo.txt parser
 
